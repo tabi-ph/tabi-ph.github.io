@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="fil">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kuwento ng TABI</title>
+<meta name="description" content="Paano nagsimula ang TABI, at ang bawat hakbang hanggang ngayon.">
+<meta name="theme-color" content="#14213D">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="../">
+      <svg viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" rx="24" fill="#FFC531"/><path d="M25 75V51C25 35 32 29 44 29" stroke="#14213D" stroke-width="11" stroke-linecap="round" fill="none"/><circle cx="66" cy="29" r="7" fill="#14213D"/></svg>
+      TABI
+    </a>
+    <nav aria-label="Main"><a href="../">Home</a><a href="../#tester">Maging tester</a><a href="../privacy/">Privacy</a></nav>
+  </div>
+    <div class="billboard"><div class="wrap"><span class="bb-tag">Bago</span><a id="bb-link" href="../kuwento/#2026-11-12"><span id="bb-text">Kilala na ng Google ang TABI</span> <strong>Basahin →</strong></a></div></div>
+</header>
+
+<main class="doc">
+  <span class="pill" style="background:#FFF1C9;color:#6B4E00">KUWENTO NG TABI</span>
+  <h1 style="margin-top:14px">Paano nagsimula ang TABI</h1>
+
+  <p>Hindi bago ang ideya ng GPS alarm. Sa loob ng halos sampung taon, gumamit na ako ng isa o dalawang ganitong app. Pero paulit-ulit ang problema: kulang sa features, mahirap gamitin, at higit sa lahat, may mga araw na lumalampas pa rin ako, at nagigising na malayo na sa babaan ko.</p>
+  <p>Isang araw, habang naghihintay sa ospital, pumasok ang tanong: <em>bakit hindi gumawa ng simple pero maaasahang app, para hindi na lumampas ang mga commuter na tulad ko, at makaidlip sila nang panatag dahil alam nilang may gigising sa kanila?</em></p>
+  <p>Doon nagsimula ang TABI. Isang simpleng location alarm lang sa umpisa, hanggang lumaki nang lumaki ang ideya.</p>
+
+  <div class="box" style="margin:26px 0">
+    <p style="margin:0 0 8px"><strong>Bakit TABI?</strong> Mula sa "Dyan lang po sa tabi," ang sinasabi natin sa driver kapag bababa na. Madaling tandaan, at ipinapaliwanag na ang sarili.</p>
+    <p style="margin:0"><strong>Ang pangako:</strong> Gigisingin ka na, ihahatid ka pa.</p>
+  </div>
+  <p class="meta">– Benjie, gumawa ng TABI</p>
+
+  <h2 id="timeline">Ang mga hakbang hanggang ngayon</h2>
+  <p class="meta">Pinakabago sa itaas. Mas marami pang kuwento sa aming <a href="https://www.facebook.com/profile.php?id=61596019177519">Facebook page</a>.</p>
+  <ol id="list" style="list-style:none;padding:0;margin:20px 0 0;display:flex;flex-direction:column;gap:14px"></ol>
+  <noscript><p>Buksan ang JavaScript para makita ang timeline.</p></noscript>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>© 2026 TABI · Dyan lang po sa tabi.</div>
+    <div><a href="../">Home</a> · <a href="../privacy/">Privacy</a> · <a href="mailto:hello@tabi.ph">hello@tabi.ph</a></div>
+  </div>
+</footer>
+<script>
+(function(){
+  var M=['Ene','Peb','Mar','Abr','May','Hun','Hul','Ago','Set','Okt','Nob','Dis'];
+  function fmt(d){var p=d.split('-');return M[+p[1]-1]+' '+(+p[2])+', '+p[0];}
+  fetch('../updates.json',{cache:'no-cache'}).then(function(r){return r.json();}).then(function(items){
+    var ol=document.getElementById('list');
+    items.forEach(function(u){
+      var li=document.createElement('li'); li.className='card'; li.id=u.date;
+      var d=document.createElement('div'); d.className='meta'; d.style.fontWeight='700'; d.textContent=fmt(u.date);
+      var h=document.createElement('h3'); h.textContent=u.title; h.style.margin='4px 0 6px';
+      var p=document.createElement('p'); p.textContent=u.text; p.style.margin='0';
+      li.appendChild(d); li.appendChild(h); li.appendChild(p);
+      if(u.link){var a=document.createElement('a'); a.href=u.link; a.textContent='Basahin sa Facebook →'; a.style.display='inline-block'; a.style.marginTop='8px'; a.style.fontWeight='700'; li.appendChild(a);}
+      ol.appendChild(li);
+    });
+    if(location.hash && window.tabiPlace) window.tabiPlace();
+  }).catch(function(){});
+})();
+</script>
+<script src="../bb.js"></script>
+</body>
+</html>
