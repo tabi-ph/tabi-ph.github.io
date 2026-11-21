@@ -49,11 +49,12 @@
     <div><a href="../">Home</a> · <a href="../privacy/">Privacy</a> · <a href="mailto:hello@tabi.ph">hello@tabi.ph</a></div>
   </div>
 </footer>
+<script src="../bb.js"></script>
 <script>
 (function(){
   var M=['Ene','Peb','Mar','Abr','May','Hun','Hul','Ago','Set','Okt','Nob','Dis'];
   function fmt(d){var p=d.split('-');return M[+p[1]-1]+' '+(+p[2])+', '+p[0];}
-  fetch('../updates.json',{cache:'no-cache'}).then(function(r){return r.json();}).then(function(items){
+  (window.tabiUpdates || fetch('../updates.json',{cache:'no-cache'}).then(function(r){return r.json();})).then(function(items){
     var ol=document.getElementById('list');
     items.forEach(function(u){
       var li=document.createElement('li'); li.className='card'; li.id=u.date;
@@ -68,7 +69,6 @@
   }).catch(function(){});
 })();
 </script>
-<script src="../bb.js"></script>
 <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab03f6d7e9174cfdb81362b89c117fd9"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>
