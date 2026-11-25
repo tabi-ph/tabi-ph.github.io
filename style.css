@@ -67,7 +67,7 @@ footer a{color:#DDE2EB}
  main>section{min-height:calc(100vh - var(--hdr,68px));display:flex;align-items:center;scroll-snap-align:start;padding:48px 0}
  main>section>.wrap{width:100%}
  #features{padding-top:48px!important}
- #tester{min-height:0;padding:64px 0}
+ #tester{padding:64px 0}
  html.snap footer{scroll-snap-align:end}
 }
 @media (max-width:820px){
@@ -78,3 +78,8 @@ footer a{color:#DDE2EB}
 .nav .billboard .wrap{justify-content:flex-start;flex-wrap:nowrap;min-height:40px;padding-top:0;padding-bottom:0;gap:12px}
 .nav .billboard a{color:#14213D}
 #list li{scroll-margin-top:16px}
+
+/* Nov 25: "Maging tester" is the last section, so the page couldn't scroll far enough and the end of the
+   section above showed under the header. It now fills the screen above the footer (--ftr is set by bb.js). */
+#tester{min-height:calc(100vh - var(--hdr,68px) - var(--ftr,96px));min-height:calc(100dvh - var(--hdr,68px) - var(--ftr,96px));display:flex;align-items:center}
+#tester>.wrap{width:100%}

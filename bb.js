@@ -4,7 +4,8 @@
   var base = (document.currentScript && document.currentScript.src || '').replace(/bb\.js(\?.*)?$/, '');
   // open every page at the top (or at the #section in the link), not where the last visit left off
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-  function fit(){ var h=document.querySelector('header.nav'); if(!h) return;
+  function fit(){ var f=document.querySelector('body>footer'); if(f) document.documentElement.style.setProperty('--ftr', f.offsetHeight+'px');
+    var h=document.querySelector('header.nav'); if(!h) return;
     var px=h.offsetHeight+'px'; document.documentElement.style.setProperty('--hdr',px); document.documentElement.style.scrollPaddingTop=px; }
   function place(){ fit(); var id=decodeURIComponent(location.hash.slice(1)); var el=id&&document.getElementById(id);
     if(el){ el.scrollIntoView({behavior:'instant', block:'start'}); } else { window.scrollTo({top:0, left:0, behavior:'instant'}); } }
