@@ -1,8 +1,9 @@
 {
-  "updated": "2026-11-25",
+  "updated": "2026-11-26",
   "group": "STI Global Students · Wave 1",
   "testDates": "Nob 25 – Dis 8, 2026",
   "top": [
+    { "nick": "Carl", "points": 8, "trips": 2 },
     { "nick": "Joules", "points": 7, "trips": 2 }
   ]
 }
