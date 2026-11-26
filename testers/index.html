@@ -84,12 +84,40 @@
 </footer>
 <script>
 (function(){
+  /* Board data: the scoring sheet's "Tally board" tab, published as CSV (File > Share > Publish to web >
+     Tally board > CSV), so the page updates by itself after each scoring. tally.json is the fallback. */
+  var TALLY_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQcEFBVCploXxmmPerOo4B1D6CqI3Hl1xDgIKjShTzedG4qAXYj6B3zNys34ia_iHUI-Mxd9ksMxMdo/pub?gid=696373973&single=true&output=csv';
   var M=['Ene','Peb','Mar','Abr','May','Hun','Hul','Ago','Set','Okt','Nob','Dis'];
+  var EN={Jan:'Ene',Feb:'Peb',Mar:'Mar',Apr:'Abr',May:'May',Jun:'Hun',Jul:'Hul',Aug:'Ago',Sep:'Set',Oct:'Okt',Nov:'Nob',Dec:'Dis'};
   function fmt(d){var p=d.split('-');return M[+p[1]-1]+' '+(+p[2])+', '+p[0];}
-  fetch('tally.json',{cache:'no-cache'}).then(function(r){return r.json();}).then(function(t){
+  function csv(text){ var rows=[], row=[], f='', q=false;
+    for (var i=0;i<text.length;i++){ var c=text[i];
+      if (q){ if (c=='"'){ if (text[i+1]=='"'){ f+='"'; i++; } else q=false; } else f+=c; }
+      else if (c=='"') q=true; else if (c==','){ row.push(f); f=''; }
+      else if (c=='\n' || c=='\r'){ if (c=='\r' && text[i+1]=='\n') i++; row.push(f); rows.push(row); row=[]; f=''; }
+      else f+=c; }
+    if (f!=='' || row.length){ row.push(f); rows.push(row); } return rows; }
+  function fromSheet(text){
+    var rows=csv(text), head=-1, upd='';
+    rows.forEach(function(r,i){
+      var a=(r[0]||'').trim();
+      if (head<0 && a==='Rank' && /nickname/i.test(r[1]||'')) head=i;
+      var m=a.match(/huling update:\s*(.+)$/i); if (m) upd=m[1].replace(/\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\b/, function(x){return EN[x];});
+    });
+    if (head<0) throw 0;
+    var top=[];
+    rows.slice(head+1).forEach(function(r){
+      var nick=(r[1]||'').trim(), pts=parseInt(r[2],10), trips=parseInt(r[3],10);
+      if (nick && !isNaN(pts)) top.push({nick:nick, points:pts, trips:isNaN(trips)?0:trips});
+    });
+    return {top:top, updatedText:upd};
+  }
+  function fromJson(){ return fetch('tally.json',{cache:'no-cache'}).then(function(r){return r.json();}); }
+  function draw(t){
     if(t.group) document.getElementById('grp').textContent=t.group;
     if(t.testDates) document.getElementById('dates').textContent=t.testDates;
-    if(t.updated) document.getElementById('upd').textContent='huling update: '+fmt(t.updated);
+    if(t.updatedText) document.getElementById('upd').textContent='huling update: '+t.updatedText;
+    else if(t.updated) document.getElementById('upd').textContent='huling update: '+fmt(t.updated);
     var ol=document.getElementById('board'), top=(t.top||[]).slice(0,10);
     if(!top.length){ var e=document.createElement('li'); e.className='empty'; e.textContent='Wala pang puntos. Ipadala ang unang trip log mo para mapasama dito!'; ol.appendChild(e); return; }
     var rank=0, prev=null;
@@ -105,7 +133,15 @@
     });
     if(top.length<5){ var h=document.createElement('li'); h.className='empty'; h.textContent='Bukas pa ang Top 5! Bawat trip log ay may puntos.'; ol.appendChild(h); }
     if(location.hash && window.tabiPlace) window.tabiPlace();
-  }).catch(function(){});
+  }
+  var base = fromJson().catch(function(){ return {}; });
+  var live = /^https:\/\//.test(TALLY_CSV)
+    ? fetch(TALLY_CSV + (TALLY_CSV.indexOf('?')<0?'?':'&') + 't=' + Date.now()).then(function(r){ if(!r.ok) throw 0; return r.text(); }).then(fromSheet)
+    : Promise.reject(0);
+  base.then(function(j){
+    live.then(function(s){ draw({group:j.group, testDates:j.testDates, top:s.top, updatedText:s.updatedText}); })
+        .catch(function(){ draw(j); });
+  });
 })();
 </script>
 <script src="../bb.js"></script>
